@@ -1,8 +1,7 @@
-import get_coin_list from './get_coin_list';
+import updateData from './lib/update_data';
 
 setInterval(async () => {
-  const coin_list = await get_coin_list();
-  console.log(coin_list);
-}, 20000);
+  await updateData()
+}, 1000 * 60 * 5);
 
 

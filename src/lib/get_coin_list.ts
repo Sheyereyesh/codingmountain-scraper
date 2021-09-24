@@ -1,19 +1,19 @@
 import Puppeteer from 'puppeteer';
 
-interface Coin {
-	coin_image_url: string;
-	coin_name: string;
-	coin_code: string;
-	coin_price: number;
-	coin_market_cap: string;
-	coin_change: string;
+export interface CoinInterface {
+	image: string;
+	name: string;
+	code: string;
+	price: number;
+	market_cap: string;
+	change: string;
 }
 
 export default async function get_coin_list() {
 	const browser = await Puppeteer.launch({ headless: false, devtools: true });
 	const page = await browser.newPage();
 	await page.goto('https://coinranking.com');
-	const coin_list: Coin[] = await page.evaluate(() => {
+	const coin_list: CoinInterface[] = await page.evaluate(() => {
 		const coin_table_rows = Array.from(
 			document.querySelectorAll<HTMLTableRowElement>(
 				'.coins-page .table .table__body tr:not(.table__row--ad)'
@@ -41,14 +41,15 @@ export default async function get_coin_list() {
 				'.change'
 			)!.textContent as string;
 			return {
-				coin_image_url: coin_image_url,
-				coin_name: coin_name.replace(/[\n]\s+/g, ''),
-				coin_code: coin_code.replace(/[\n\t\r\s]/g, ''),
-				coin_price: Number(coin_price.replace(/[^0-9.-]+/g, '')),
-				coin_market_cap: coin_market_cap.replace(/[\n]\s+/g, ''),
-				coin_change: coin_change.replace(/[\n]\s+/g, '')
+				image: coin_image_url,
+				name: coin_name.replace(/[\n]\s+/g, ''),
+				code: coin_code.replace(/[\n\t\r\s]/g, ''),
+				price: Number(coin_price.replace(/[^0-9.-]+/g, '')),
+				market_cap: coin_market_cap.replace(/[\n]\s+/g, ''),
+				change: coin_change.replace(/[\n]\s+/g, '')
 			};
 		});
 	});
+	browser.close();
 	return coin_list;
 }
