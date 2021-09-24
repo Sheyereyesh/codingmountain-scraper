@@ -1,6 +1,7 @@
 # Coding mountain assessment
   - git clone https://github.com/Sheyereyesh/codingmountain-scraper.git
   - cd codingmountain-scraper
+  - create mysql database
 # server
   - npm install
   - create .env file  with content
